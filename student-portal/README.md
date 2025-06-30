@@ -1,70 +1,71 @@
-# Getting Started with Create React App
+# Time Table Management System (TMS)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A web-based application designed to streamline course scheduling and communication for IIT Indore, replacing the inefficient Excel-based system with a user-friendly, centralized platform.
 
-## Available Scripts
+## Team Members
+- Sanjay S (Team Leader)
+- S Sonu
+- K Tagore
+- V Aravind
 
-In the project directory, you can run:
+## Institution
+Indian Institute of Technology Indore
 
-### `npm start`
+## Project Status
+As of 05:45 PM IST, Saturday, June 28, 2025
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Overview
+This project aims to develop a time table management web app for IIT Indore, facilitating administrators, students, and professors with efficient scheduling and communication tools. The app will replace the current cluttered Excel system, reducing confusion and improving coordination.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
+### Must-Have Features
+- **Admin Dashboard**: Create, edit, and delete courses; design and update timetables; view schedules and pending requests.
+- **Student Interface**: Display personalized timetables, send notifications, allow voting on polls.
+- **Professor Interface**: View schedules, submit timing change requests, create polls.
+- **Real-Time Updates**: Reflect changes instantly across all interfaces.
+- **Responsive Design**: Ensure functionality on desktop and mobile devices.
 
-### `npm test`
+### Extra Features
+- Calendar integration (e.g., Google Calendar).
+- Conflict detection for overlapping schedules.
+- Chat or messaging feature.
+- Offline mode for cached timetables.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Work Completed
+### UI/UX Design in Figma
+- **Settings Page**: Includes dark mode toggle, privacy settings, notification settings, and save button.
+- **Profile Page**: Displays user details (name, institute email ID, department, academic year).
+- **Timetable Page**: Features a weekly schedule grid (8:30 AM - 6:25 PM, Monday to Saturday).
+- **Dashboard Page**: Shows total courses (07), attendance (60% with 24% absent), upcoming classes (e.g., Differential Equations-I at 8:00 AM), and recent activity (e.g., checked in for Discrete Math).
+- Consistent sidebar navigation (Dashboard, Profile, Registration, Timetable, Attendance, Settings) and responsive navbar with user authentication indicators.
 
-### `npm run build`
+### Learning and Skill Development
+- **React.js**: For building interactive user interfaces.
+- **Node.js**: For server-side development and API integration.
+- **Bootstrap**: For responsive and stylized front-end design.
+- **MySQL**: For database management and data storage.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Next Steps
+- Front-end implementation using React.js and Bootstrap.
+- Backend development with Node.js.
+- Database integration with MySQL.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Challenges
+- Ensuring real-time updates.
+- Maintaining responsive design across all devices.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Deliverables
+- Fully functional web app hosted online.
+- Source code on this GitHub repository.
+- README explaining features, setup, and tech stack.
 
-### `npm run eject`
+## Setup
+### Prerequisites
+- Node.js (version >= 14)
+- MySQL (version >= 5.7)
+- Git
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Sonu3068/TMS.git
