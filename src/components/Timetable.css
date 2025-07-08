@@ -1,0 +1,94 @@
+.timetable-wrapper {
+  overflow-x: auto;
+  padding: 10px;
+  background-color: #fff;
+  height: 95vh;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
+}
+
+.timetable {
+  width: 100%;
+  min-width: 1400px; /* Increased min-width for more content, ensuring scrolling on small devices */
+  border-collapse: collapse;
+  background-color: #fff;
+  white-space: pre-wrap;
+   height: 95vh;
+}
+
+.timetable th,
+.timetable td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+
+  font-size: 14px;
+}
+
+.timetable th {
+  background-color: #34495e;
+  color: white;
+  top: 0;
+  z-index: 1;
+}
+
+.timetable td {
+  background-color: #ecf0f1;
+}
+
+.timetable td.scheduled {
+  background-color: #3498db;
+  color: white;
+}
+
+/* Custom scrollbar for better visibility */
+.timetable-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.timetable-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.timetable-wrapper::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.timetable-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+
+@media (max-width: 768px) {
+  .timetable-wrapper {
+   width:100vw;
+  height: 90vh;
+     overflow-x: scroll;
+     -webkit-overflow-scrolling: touch;
+  }
+  .timetable th,
+  .timetable td {
+    font-size: 10px;
+    padding: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timetable-wrapper {
+ width:100vw;
+  height: 90vh;
+     overflow-x: scroll;
+     -webkit-overflow-scrolling: touch;
+   
+  }
+  .timetable{
+    width:100%;
+    height: 90vh;
+  }
+  .timetable th,
+  .timetable td {
+    font-size: 8px;
+    padding: 4px;
+  }
+}
