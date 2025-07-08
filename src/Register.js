@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
  // Assuming you have a CSS file for styling
 
 export default function Register() {
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
-    email: "",
+    useremail: "",
     username: "",
     password: "",
   });
@@ -21,29 +23,30 @@ export default function Register() {
     e.preventDefault();
     console.log("Form submitted:", formData);
     // Add your submission logic here (e.g., API call)
-    setFormData({ email: "", username: "", password: "" }); // Reset form
+    setFormData({ useremail: "", username: "", password: "" }); // Reset form
+     navigate('/Student');
   };
 
   return (
-    <div className="register active">
+    <div className="register ">
       <div className="right">
         <h1>Register Here</h1>
         <form onSubmit={handleSubmit}>
-          <p>
+          <p className="d-flex justify-content-between align-items-center gap-2">
             <i className="fa-solid fa-envelope"></i>
             <input
-              type="email"
-              name="email"
+              type="useremail"
+              name="useremail"
               placeholder="Please Enter your mail Id"
               value={formData.email}
               onChange={handleChange}
               required
             />
           </p>
-          <p>
+          <p className="d-flex justify-content-between align-items-center gap-2">
             <i className="fa-solid fa-circle-user"></i>
             <input
-              type="text" // Changed from "username" to "text" as "username" is not a valid input type
+              type="username"
               name="username"
               placeholder="Please Enter your Username"
               value={formData.username}
@@ -51,7 +54,7 @@ export default function Register() {
               required
             />
           </p>
-          <p>
+          <p className="d-flex justify-content-between align-items-center gap-2">
             <i className="fa-solid fa-lock"></i>
             <input
               type="password"

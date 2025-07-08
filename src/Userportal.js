@@ -6,14 +6,14 @@ import './style.css';
 
 export default function Userportal() {
   return (
-    <div className="body">
-      
-    
+    <div className="user">
+
     <Routes>
       <Route path="/" element={<Navigate to="Login" />} />
       <Route path="Login" element={<Userlogin />} />
       <Route path="Register" element={<Register />} />
-    </Routes>  </div>
+    </Routes>  
+    </div>
 
   );
 }

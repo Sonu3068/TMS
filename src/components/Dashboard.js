@@ -13,10 +13,12 @@ export default function Dashboard(props) {
   return (
     <div className="main-content">
       <main
-        
+        style={{
+        marginLeft: window.innerWidth<768? "3rem" : "0rem",
+        }}
       >
         <h1 className="ml-2">Dashboard</h1>
-        <div className="d-flex justify-content-center">
+        <div className="d-flex justify-content-center gap-3 flex-wrap">
           <div className="dashboard-section total">
             <h3>Total Courses</h3>
             <p>07</p>
