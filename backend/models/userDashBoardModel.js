@@ -16,6 +16,8 @@ connection.connect((err) => {
   console.log('Connected to MySQL database');
 });
 
+
+
 async function displayTabels() {
 
     const [rows] = await connection.query('SHOW TABLES');
