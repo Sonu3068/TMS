@@ -43,7 +43,12 @@ export default function Enroll(props) {
     <div className="m">
       <main
         
-     
+        style={{
+          marginLeft:window.innerWidth < 768
+              ? "2.5rem"
+              : "11.5rem"
+          
+        }}
       >
         <div className="enroll">
           <h1>Course Enrollment</h1>

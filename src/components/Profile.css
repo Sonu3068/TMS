@@ -4,7 +4,8 @@
   --primary-hover: #4338ca;
   --text: #1f2937;
   --border: #d1d5db;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.05);
   --avatar-bg: #fce7f3;
   --avatar-text: #6b21a8;
   --card-bg: #ffffff;
@@ -13,31 +14,26 @@
 .ma {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
   background-color: var(--bg);
-  padding: 1rem;
 }
 
 main {
   width: 100%;
-  max-width: 600px;
+
   padding: 1.5rem;
 }
 
 .profile-area {
+  position: relative;
   background-color: var(--card-bg);
+  height: 40vh;
+  width:80vw;
+  margin-left:2vw;
   border-radius: 12px;
-  padding: 2rem;
   box-shadow: var(--shadow);
   text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.avatar-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 4rem;
+  z-index: 1;
 }
 
 .avatar {
@@ -46,10 +42,13 @@ main {
   justify-content: center;
   background-color: var(--avatar-bg);
   border-radius: 50%;
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border: 3px solid var(--primary);
   transition: transform 0.2s ease;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
 }
 
 .avatar:hover {
@@ -67,6 +66,9 @@ main {
   padding: 1.5rem;
   box-shadow: var(--shadow);
   text-align: left;
+  width: 60vw;
+   margin-left:11vw;
+   padding-left: 10%;
 }
 
 .profile-details p {
@@ -95,6 +97,8 @@ main {
 
   .profile-area {
     padding: 1.5rem;
+    height: 30vh;
+
   }
 
   .avatar {
@@ -103,7 +107,7 @@ main {
   }
 
   .avatar span {
-    font-size: 3rem;
+    font-size: 2rem;
   }
 
   .profile-details {

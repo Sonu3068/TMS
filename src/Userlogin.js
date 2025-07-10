@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 
 export default function Userlogin() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ useremail: '', password: '' });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -25,10 +25,10 @@ export default function Userlogin() {
           <p className="d-flex justify-content-between align-items-center gap-2">
             <i className="fa-solid fa-circle-user"></i>
             <input
-              type="email"
-              name="email"
+              type="useremail"
+              name="useremail"
               placeholder="Please Enter your mail Id"
-              value={formData.email}
+              value={formData.useremail}
               onChange={handleChange}
               required
             />
