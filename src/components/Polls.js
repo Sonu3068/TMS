@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import './Polls.css'; // Import the CSS file
+import './Polls.css';
 
 const Polls = () => {
-  const [options, setOptions] = useState([
-    { id: 1, text: 'Option A', votes: 0 },
-    { id: 2, text: 'Option B', votes: 0 },
-    { id: 3, text: 'Option C', votes: 0 },
-    { id: 4, text: 'Option D', votes: 0 },
-  ]);
+  const initialoptions =[ { id: 1, text: 'Option A'},
+    { id: 2, text: 'Option B'}];
+  const [options, setOptions] = useState(
+   initialoptions.map(options => ({ ...options, votes: 0 }))
+  );
 
   const [selectedOption, setSelectedOption] = useState(null);
   const [voted, setVoted] = useState(false);
@@ -48,29 +47,24 @@ const Polls = () => {
       ) : (
         <>
           <h3 className="poll-results-title">Results:</h3>
-          {options.map(option => (
-            <div key={option.id} className="poll-result">
-              <div className="poll-result-header">
-                <span>{option.text}</span>
-                <span>{option.votes} votes ({totalVotes ? ((option.votes / totalVotes) * 100).toFixed(1) : 0}%)</span>
+          {options.map(option => {
+            const percentage = totalVotes ? ((option.votes / totalVotes) * 100).toFixed(1) : 0;
+            return (
+              <div key={option.id} className="poll-result">
+                <div className="poll-result-header">
+                  <span>{option.text}</span>
+                  <span>{percentage}% ({option.votes} votes)</span>
+                </div>
+                <div className="poll-bar-container">
+                  <div
+                    className="poll-bar"
+                    style={{ width: `${percentage}%` }}
+                  ></div>
+                </div>
               </div>
-              <div className="poll-bar-container">
-                <div
-                  className="poll-bar"
-                  style={{ width: `${totalVotes ? (option.votes / totalVotes) * 100 : 0}%` }}
-                ></div>
-              </div>
-            </div>
-          ))}
-          <button
-            onClick={() => {
-              setSelectedOption(null);
-              setVoted(false);
-            }}
-            className="poll-button"
-          >
-            Vote Again
-          </button>
+            );
+          })}
+         
         </>
       )}
     </div>

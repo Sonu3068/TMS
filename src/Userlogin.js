@@ -14,7 +14,7 @@ export default function Userlogin() {
     e.preventDefault();
     // Add login logic (e.g., API call)
     console.log('Login:', formData);
-    navigate('/Student');
+    navigate('/Proffessor');
   };
 
   return (

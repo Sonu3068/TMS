@@ -24,7 +24,15 @@ export default function Register() {
     console.log("Form submitted:", formData);
     // Add your submission logic here (e.g., API call)
     setFormData({ useremail: "", username: "", password: "" }); // Reset form
-     navigate('/Student');
+   navigate('/Admin')
+//      if (role === 'student') {
+//   navigate('/Student');
+// } else if (role === 'professor') {
+//   navigate('/Proffessor');
+// } else if (role === 'admin') {
+//    navigate('/Admin');
+// }
+
   };
 
   return (
