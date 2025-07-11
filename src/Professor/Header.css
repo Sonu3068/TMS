@@ -1,0 +1,31 @@
+
+.head{
+    display:flex;
+    background-color: #1B150C;
+   height:50px;
+   justify-content: flex-end;
+   border: 1px solid transparent ;
+   align-items:center;
+   border-bottom-right-radius: 10px ;
+   color:white;
+   padding-right: 2rem;
+
+}
+
+.border{
+    background-color:#1B150C ;
+    color: aliceblue;
+
+    outline:none;
+    border:0px solid white;
+    text-align: center;
+    margin-left: 15px;
+}
+.student{
+    font-size:16px;
+    color:rgba(240, 248, 255, 0.774)
+}
+.log{
+   font-size: 15px; 
+   color:white;
+}

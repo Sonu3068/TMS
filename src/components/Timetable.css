@@ -1,8 +1,10 @@
 .timetable-wrapper {
   overflow-x: auto;
   padding: 10px;
+  padding-top: 0%;
   background-color: #fff;
-  height: 95vh;
+     overflow-y: scroll;
+  height: 85vh;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
 }
 
@@ -12,7 +14,8 @@
   border-collapse: collapse;
   background-color: #fff;
   white-space: pre-wrap;
-   height: 95vh;
+   height: 90vh;
+
 }
 
 .timetable th,

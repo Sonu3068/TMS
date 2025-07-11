@@ -24,7 +24,11 @@ const Polls = () => {
   const totalVotes = options.reduce((sum, option) => sum + option.votes, 0);
 
   return (
-    <div className="poll-container">
+    <main  style={{
+        marginLeft: window.innerWidth<768? "3rem" : "11.5rem",
+        }}>
+    <div className="poll-container"
+     >
       <h2 className="poll-title">Vote for your favorite option!</h2>
 
       {!voted ? (
@@ -67,7 +71,7 @@ const Polls = () => {
          
         </>
       )}
-    </div>
+    </div></main>
   );
 };
 

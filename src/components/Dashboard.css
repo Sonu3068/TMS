@@ -66,8 +66,8 @@ h1 {
 
 .past {
   background-color: var(--past-bg);
-  width: 100%;
-  max-width: 600px;
+  max-width:60vw;
+ 
 }
 
 .dashboard-section h3 {

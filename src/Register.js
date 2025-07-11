@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Link , useNavigate } from "react-router-dom";
- // Assuming you have a CSS file for styling
+import { Link, useNavigate } from "react-router-dom";
+// Assuming you have a CSS file for styling
 
 export default function Register() {
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     useremail: "",
     username: "",
@@ -24,15 +24,14 @@ export default function Register() {
     console.log("Form submitted:", formData);
     // Add your submission logic here (e.g., API call)
     setFormData({ useremail: "", username: "", password: "" }); // Reset form
-   navigate('/Admin')
-//      if (role === 'student') {
-//   navigate('/Student');
-// } else if (role === 'professor') {
-//   navigate('/Proffessor');
-// } else if (role === 'admin') {
-//    navigate('/Admin');
-// }
-
+    navigate("/Student");
+    //      if (role === 'student') {
+    //   navigate('/Student');
+    // } else if (role === 'professor') {
+    //   navigate('/Proffessor');
+    // } else if (role === 'admin') {
+    //    navigate('/Admin');
+    // }
   };
 
   return (

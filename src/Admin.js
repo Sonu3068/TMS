@@ -5,6 +5,9 @@ import AdminDashboard from "./Admin/AdminDashboard";
 import Header from "./Admin/Header";
 import Edit from "./Admin/Edit";
 import AdminTimetable from "./Admin/AdminTimetable";
+import Pollsresult from "./Admin/Pollsresult";
+import Adminprofile from "./Admin/Adminprofile";
+import Request from "./Admin/Request";
 
 export default function Admin() {
    const [isExpanded, setIsExpanded] = useState(true);
@@ -21,6 +24,9 @@ export default function Admin() {
         <Route path="AdminDashboard" element={<AdminDashboard />} />
         <Route path="Admintimetable" element={<AdminTimetable />} />
         <Route path="Edit" element={<Edit/>} />
+           <Route path="Requests" element={<Request/>} />
+         <Route path="Pollsresult" element={<Pollsresult/>} />
+         <Route path="Adminprofile" element={<Adminprofile/>} />
       </Routes>
     </>
   );

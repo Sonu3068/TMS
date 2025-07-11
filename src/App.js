@@ -5,7 +5,8 @@ import Userportal from "./Userportal";
 import Student from "./Student";
 import ForgotPassword from "./ForgotPassword"; // Create this component
 import Admin from "./Admin";
-import Proffessor from "./Proffessor";
+import Professor from "./Professor";
+
 
 export default function App() {
   return (
@@ -15,7 +16,7 @@ export default function App() {
       <Route path="/Student/*" element={<Student />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/Admin/*" element={<Admin />} />
-      <Route path="/Proffessor/*" element={<Proffessor />} />
+  <Route path="/Professor/*" element={<Professor/>} />
     </Routes>
   );
 }

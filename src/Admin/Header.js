@@ -4,41 +4,28 @@ import "./Header.css";
 export default function Header() {
   return (
     <>
-    <div className="head" >
-      <ul className="nav justify-content-end  bg-dark ">
+    <div className="head " >
+      <ul className="nav justify-content-end gap-2  bg-transparent">
         <li className="nav-item">
-          <a className="nav-link textdecoration-none" href="/">
+          <a className="nav-link textdecoration-none text-white" href="/">
             <i className="fa-solid fa-bell"></i>
           </a>
         </li>
 
         <li className="nav-item  ">
-          <a
-            className="nav-link dropdown-toggle textdecoration-none text-white "
-            href="/"
+          <div
+          style={{fontSize:"20px",display:"flex",flexDirection:"column",height:"10px",padding:"0px",marginLeft:"10px"}}
+         
             id="navbarDarkDropdownMenuLink"
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
            Username
+       <p style={{fontSize:"10px",opacity:"0.6",paddingLeft:"40%"}}>   Admin</p>
            
-          </a>
-          <ul
-            className="dropdown-menu dropdown-menu-dark"
-            aria-labelledby="navbarDarkDropdownMenuLink"
-          >
-            <li>
-              <a className="dropdown-item textdecoration-none" href="/">
-                Action
-              </a>
-            </li>
-            <li>
-              <a className="dropdown-item" href="/">
-                Another action
-              </a>
-            </li>
-          </ul>
+          </div>
+          
         </li>
       </ul>
       </div>

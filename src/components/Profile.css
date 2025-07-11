@@ -74,6 +74,7 @@ main {
   width: 60vw;
    margin-left:11vw;
    padding-left: 10%;
+   overflow-x: scroll;
 }
 
 .profile-details p {
@@ -117,10 +118,14 @@ main {
 
   .profile-details {
     padding: 1rem;
+    padding-top: 3rem;
+    height:50vh;
+    width:65vw;
   }
 
   .profile-details p {
     font-size: 0.95rem;
+    margin-bottom: 2rem;
   }
 
   .profile-details p strong {

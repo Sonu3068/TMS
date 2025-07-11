@@ -1,6 +1,4 @@
-*{
-    font-size: 20px;
-}
+
 .head{
     display:flex;
     background-color: #1B150C;
@@ -9,8 +7,6 @@
    border: 1px solid transparent ;
    align-items:center;
    border-bottom-right-radius: 10px ;
-   color:white;
-   padding-right: 2rem;
 
 }
 
