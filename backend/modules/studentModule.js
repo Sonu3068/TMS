@@ -1,12 +1,19 @@
 // getting express
 const express = require("express")
 
+// Model
+const { fetchCourses, postEnrollment } = require("../models/enrollementModel")
+
 // getting router
 const userDashBoardModule = express.Router()
 
-userDashBoardModule.get("/", (req, res)=> {
+userDashBoardModule.get("/enrollment", async (req, res)=> {
 
-    res.send("getting all the users data")
+    // const {dept} = req.
+    const use = req.user
+
+    const courses = await fetchCourses(res, req.body.dept)
+    res.status(200).send(courses)
 
 })
 
@@ -18,10 +25,12 @@ userDashBoardModule.get("/:id", (req, res)=> {
 
 })
 
-userDashBoardModule.post("/:id", (req, res)=> {
+userDashBoardModule.post("/enrollment", async (req, res)=> {
 
-    const id = req.params.id
-    res.send(`posting the users data of id: ${id}`)
+    const student_id = req.user.payload.user_id
+    const {course_code} = req.body
+
+    await postEnrollment(res, student_id, course_code)
 
 })
 

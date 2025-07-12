@@ -1,5 +1,4 @@
 // importing mysql2
-const { copyFileSync } = require("fs")
 const mysql = require("mysql2")
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') })
 
@@ -20,18 +19,81 @@ connection.connect((err) => {
 async function getUserByEmail(res, email){
   try {
     
-      const [rows] = await connection.query("select * from users where email = ?", [email])
+      const [rows] = await connection.query("select * from user where email = ?", [email])
+      if (!(rows.length === 0)) {
+        const role = rows[0].role
+
+        if (role === "professor") {
+
+          const [rows] = await connection.query("select * from professors where email = ?", [email])
+          return {
+            existingUser: rows,
+            role: role
+          }
+      
+        } else if (role === "student"){
+
+          const [rows] = await connection.query("select * from students where email = ?", [email])
+          return {
+            existingUser: rows,
+            role: role
+          }
+
+          
+        } else if (role === "admin") {
+      
+          const [rows] = await connection.query("select * from admins where email = ?", [email]) 
+          return {
+            existingUser: rows,
+            role: role
+          }
+
+        }
+      }
       return rows
 
     } catch (error) {
+
       if (error) return res.status(500).json({ error: error.message })
+
     }
 }
 
-async function postUser(username, email, password, callback) {
-    await connection.query("Insert into users (username, email, password) values (?, ?, ?)", [username, email, password], callback) 
-    const [rows] = await connection.query("select * from users where email = ?", [email])
+async function postUser(res, name, email, password_hash, role) {
+  try {
+
+    
+    if (role === "professor") {
+      
+      await connection.query("Insert into professors (name, email, password_hash) values (?, ?, ?)", [name, email, password_hash]) 
+
+    } else if (role === "student"){
+      
+      connection.query("Insert into students (name, email, password_hash) values (?, ?, ?)", [name, email, password_hash]) 
+      
+    } else if (role === "admin") {
+      
+      await connection.query("Insert into admins (name, email, password_hash) values (?, ?, ?)", [name, email, password_hash]) 
+
+    }
+    
+    await connection.query("Insert into user (name, email, password_hash, role) values (?, ?, ?, ?)", [name, email, password_hash, role])
+
+    role = role + "s"
+
+    const [rows] = await connection.query("select * from ? where email = ?", [role, email])
     return rows
+
+  } catch (error) {
+
+    if (error) {
+      
+      res.status(500).json({ error: error.message })
+      return null
+    
+    }
+
+  }
 }
 
 module.exports = {getUserByEmail, postUser}

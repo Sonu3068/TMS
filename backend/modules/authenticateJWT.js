@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken")
 require("dotenv").config({path: require("path").resolve(__dirname, '../.env')})
 
-function authorizeToken(req, res, next) {
+function authenticateJWT(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
   if (!token) return res.sendStatus(401);
@@ -13,4 +13,4 @@ function authorizeToken(req, res, next) {
   });
 }
 
-module.exports = authorizeToken
+module.exports = authenticateJWT
