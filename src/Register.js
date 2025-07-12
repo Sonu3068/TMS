@@ -25,21 +25,14 @@ export default function Register() {
     // Add your submission logic here (e.g., API call)
     setFormData({ useremail: "", username: "", password: "" }); // Reset form
     navigate("/Student");
-    //      if (role === 'student') {
-    //   navigate('/Student');
-    // } else if (role === 'professor') {
-    //   navigate('/Proffessor');
-    // } else if (role === 'admin') {
-    //    navigate('/Admin');
-    // }
   };
 
   return (
-    <div className="register ">
-      <div className="right">
+    <div className="register r">
+      <div className="right " >
         <h1>Register Here</h1>
-        <form onSubmit={handleSubmit}>
-          <p className="d-flex justify-content-between align-items-center gap-2">
+        <form onSubmit={handleSubmit} >
+          <p >
             <i className="fa-solid fa-envelope"></i>
             <input
               type="useremail"
@@ -50,7 +43,7 @@ export default function Register() {
               required
             />
           </p>
-          <p className="d-flex justify-content-between align-items-center gap-2">
+          <p >
             <i className="fa-solid fa-circle-user"></i>
             <input
               type="username"
@@ -61,7 +54,7 @@ export default function Register() {
               required
             />
           </p>
-          <p className="d-flex justify-content-between align-items-center gap-2">
+          <p >
             <i className="fa-solid fa-lock"></i>
             <input
               type="password"

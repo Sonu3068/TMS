@@ -14,7 +14,6 @@ p {
 
 label {
   width: fit-content;
-
 }
 
 select {
@@ -26,7 +25,6 @@ select {
   padding: 10px;
   transition: 0.4s;
 }
-
 
 select:focus {
   background: #ffffff;
@@ -42,7 +40,6 @@ select:open::picker-icon {
   border: none;
 }
 option {
-  
   gap: 20px;
 
   border: 2px solid #ddd;
@@ -97,5 +94,17 @@ option::checkmark {
 }
 ::picker(select) {
   top: calc(anchor(bottom) + 1px);
- 
+}
+.timetable-wrapper {
+  padding: 0px;
+  margin-top: 0.45rem;
+  margin-right: 0.2rem;
+  border: 2px solid #2600ff;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .timetable-wrapper {
+    width: 90vw;
+  }
 }

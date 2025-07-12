@@ -22,7 +22,7 @@ export default function Userlogin() {
       <div className="right">
         <h1>Log In</h1>
         <form onSubmit={handleSubmit}>
-          <p className="d-flex justify-content-between align-items-center gap-2">
+          <p >
             <i className="fa-solid fa-circle-user"></i>
             <input
               type="useremail"
@@ -33,7 +33,7 @@ export default function Userlogin() {
               required
             />
           </p>
-          <p className="d-flex justify-content-between align-items-center gap-2">
+          <p>
             <i className="fa-solid fa-envelope"></i>
             <input
               type="password"

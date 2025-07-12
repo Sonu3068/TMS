@@ -96,10 +96,10 @@ export default function AdminTimetable() {
   const selectedTimetable = timetableData.find(t => t.studentYear === selectedYear)?.schedule || {};
 
   return (
-    <div style={{marginLeft:window.innerWidth < 768 ? "2.5rem" : "2.5rem",textAlign: "center"}}>
-    <div className="timetable-container">
+    <div style={{backgroundColor: "#2bacfd3c",height: "93.475vh",}}>
+    <div className="timetable-container"style={{marginLeft:window.innerWidth < 768 ? "3rem" : "3rem",textAlign: "center"}}>
       <select
-      style={{width: "97%", padding: "10px", fontSize: "16px",backgroundColor: "#ffffff", border: "1px solid #1500fe", borderRadius: "4px",boxShadow: " 4px 4px 4px 4px rgba(97, 35, 241, 0.1)"}}
+      style={{width: "90%", padding: "10px", fontSize: "16px",backgroundColor: "#ffffff", border: "1px solid #1500fe", borderRadius: "4px",boxShadow: " 4px 4px 4px 4px rgba(97, 35, 241, 0.1)"}}
         value={selectedYear}
         onChange={(e) => setSelectedYear(e.target.value)}
         className="year-select"

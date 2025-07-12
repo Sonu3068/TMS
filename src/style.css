@@ -93,6 +93,13 @@
   outline: 2px solid rgba(67, 140, 217, 0.945);
   outline-offset: 2px;
 }
+form p{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 0.5em 0;
+}
 
 input[type="useremail"],
 input[type="username"],
@@ -134,13 +141,19 @@ button[type="submit"] {
   transition: background-color 0.3s ease;
   width:70%;
 }
+.right h1{
+
+  font-size: 1.7em;
+  font-family:Baskerville Old Face, serif;
+
+}
 
 button[type="submit"]:hover {
-  background-color: #0056b3;
+  background-color:#4338ca;
 }
 
 button[type="submit"]:focus {
-  outline: 2px solid #0056b3;
+  outline: 2px solid #4338ca;
   outline-offset: 2px;
 }
 
@@ -151,9 +164,7 @@ button[type="submit"]:focus {
     padding: 5%;
     width: 90%;
     max-width: none;
-  }
-  .img {
-    width: 8em;
+    text-align: center;
   }
   input[type="email"],
   input[type="password"] {

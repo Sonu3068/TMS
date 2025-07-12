@@ -124,11 +124,11 @@ const [courses, setCourses] = useState([]);
 
   return (
     <div style={{marginLeft: window.innerWidth < 768 ? "2.5rem" : "11.5rem"}}>
-     <div className="container">
+     <div className="container" style={{ width: window.innerWidth < 768 ? "90%" : "80%" }}>
       <h1 className="title">{isEditing ? 'Edit Course' : 'Add Course'}</h1>
 
-      <div className="form-container">
-        <div className="form-grid">
+      <div className="form" >
+        <div className="form-grid" >
           <input
             type="text"
             name="courseCode"
