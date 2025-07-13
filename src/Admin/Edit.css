@@ -1,0 +1,208 @@
+:root {
+  --background-body: #f5f5f5;
+  --background-white: #ffffff;
+  --border-light: #ddd;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --background-table-header: #e9ecef;
+  --background-hover-light: #f0f0f0;
+  --button-primary: #007bff;
+  --button-primary-hover: #0056b3;
+  --button-edit: #ffc107;
+  --button-edit-hover: #e0a800;
+  --button-delete: #dc3545;
+  --button-delete-hover: #c82333;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--background-body);
+}
+
+.root {
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.form {
+  background: var(--background-white);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  
+}
+
+.form-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .form-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3,1fr);
+        height:25vh;
+        grid-template-areas:
+        "name nam nae "
+        "code cod coe "
+        "start star end ";
+  }
+  .form{
+    height:35vh;
+  }
+}
+
+.input {
+  padding: 0.5rem;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  width: 100%;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--button-primary);
+  box-shadow: inset 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.submit-button {
+  margin-top: 0.75rem;
+  background: var(--button-primary);
+  color: var(--background-white);
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.3s ease;
+}
+
+.submit-button:hover {
+  background: var(--button-primary-hover);
+}
+
+.search-container {
+  background: var(--background-white);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--background-white);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0.125rem 0 0 0;
+  z-index: 10;
+}
+
+.dropdown-item {
+  padding: 0.625rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: var(--background-hover-light);
+}
+
+.dropdown-item.no-results {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  padding: 0.625rem;
+}
+
+.table-container {
+  background: var(--background-white);
+  padding: 1rem;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+}
+
+.table-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.no-courses {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.course-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-header {
+  background: var(--background-table-header);
+}
+
+.table-cell {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.edit-button {
+  background: var(--button-edit);
+  color: var(--background-white);
+  padding: 0.3125rem 0.625rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 0.3125rem;
+  font-size: 0.875rem;
+  transition: background 0.3s ease;
+}
+
+.edit-button:hover {
+  background: var(--button-edit-hover);
+}
+
+.delete-button {
+  background: var(--button-delete);
+  color: var(--background-white);
+  padding: 0.3125rem 0.625rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.3s ease;
+}
+
+.delete-button:hover {
+  background: var(--button-delete-hover);
+}

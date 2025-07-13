@@ -1,0 +1,62 @@
+.page-container {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding: 40px 20px;
+}
+
+.view-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.view-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #1f2937;
+}
+
+.no-requests {
+  text-align: center;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.error-message {
+  text-align: center;
+  color: #991b1b;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.request-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.request-table th,
+.request-table td {
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+  font-size: 14px;
+  color: #374151;
+}
+
+.request-table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+}
+
+.request-table tr:nth-child(even) {
+  background-color: #f3f4f6;
+}
+
+.request-table td {
+  word-wrap: break-word;
+}
