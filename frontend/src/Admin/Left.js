@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import IITILOGO from "../components/images/iitilogo.png";
-import "./left.css";
+import "./Left.css";
 
 export default function Left(props) {
   return (

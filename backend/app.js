@@ -1,6 +1,9 @@
 // basic setup
 const express = require("express")
 require("dotenv").config()
+const cors = require('cors');
+
+
 
 // importing modules
 const userDashBoardModule = require("./modules/studentModule")
@@ -19,6 +22,15 @@ app.get("/", (req, res) => {
     res.send("bye bye ")
     console.log("jdkbsb")
 })
+// Allow requests from any origin (for development)
+app.use(cors());
+
+// or, to allow only your frontend domain:
+app.use(cors({
+  origin: 'http://localhost:3000' // or your frontend URL
+}));
+
+// Your other middleware and routes
 // authenticationModule
 app.use("/authentication", authenticationModule)
 

@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-// Assuming you have a CSS file for styling
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Register() {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
-    useremail: "",
-    username: "",
-    password: "",
+    email: '',
+    username: '',
+    password: '',
+    role: 'student',
   });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,33 +18,69 @@ export default function Register() {
       ...prev,
       [name]: value,
     }));
+    setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Add your submission logic here (e.g., API call)
-    setFormData({ useremail: "", username: "", password: "" }); // Reset form
-    navigate("/Student");
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('http://localhost:4000/authentication/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (response.status === 409) {
+          throw new Error('User already exists. Try logging in.');
+        }
+        throw new Error(errorData.error || `HTTP error ${response.status}`);
+      }
+
+      await response.json();
+      setFormData({ email: '', username: '', password: '', role: 'student' });
+      navigate('/Userportal/Login');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="register r">
-      <div className="right " >
+      <div className="right">
         <h1>Register Here</h1>
-        <form onSubmit={handleSubmit} >
-          <p >
+        {error && (
+          <p className="error">
+            {error}
+            {error.includes('already exists') && (
+              <>
+                {' '}
+                <Link to="/Userportal/Login">Log in here</Link>.
+              </>
+            )}
+          </p>
+        )}
+        <form onSubmit={handleSubmit}>
+          <p>
             <i className="fa-solid fa-envelope"></i>
             <input
               type="useremail"
-              name="useremail"
-              placeholder="Please Enter your mail Id"
+              name="email"
+              placeholder="Please Enter your Email"
               value={formData.email}
               onChange={handleChange}
               required
             />
           </p>
-          <p >
+          <p>
             <i className="fa-solid fa-circle-user"></i>
             <input
               type="username"
@@ -54,7 +91,7 @@ export default function Register() {
               required
             />
           </p>
-          <p >
+          <p>
             <i className="fa-solid fa-lock"></i>
             <input
               type="password"
@@ -65,9 +102,24 @@ export default function Register() {
               required
             />
           </p>
-          <button type="submit">Submit</button>
           <p>
-            Have an account?
+            <i className="fa-solid fa-user-tag"></i>
+            <select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              required
+            >
+              <option value="student">Student</option>
+              <option value="professor">Professor</option>
+              <option value="admin">Admin</option>
+            </select>
+          </p>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Registering...' : 'Submit'}
+          </button>
+          <p>
+            Have an account?{' '}
             <Link to="/Userportal/Login" className="reg">
               Sign In
             </Link>

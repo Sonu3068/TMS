@@ -34,7 +34,7 @@ main {
   text-align: center;
   margin-bottom: 4rem;
   z-index: 1;
-  background-image: url(../../../../../Downloads/profilebg.jpg.jpg);
+  /* background-image: url(./images/profile.jpg); */
   background-size: cover;
   background-position: center;  
   background-repeat: no-repeat;
