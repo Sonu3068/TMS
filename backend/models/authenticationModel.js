@@ -19,10 +19,12 @@ connection.connect((err) => {
 async function getUserByEmail(res, email){
   try {
     
-      const [rows] = await connection.query("select * from user where email = ?", [email])
-      if (!(rows.length === 0)) {
-        const role = rows[0].role
+    const [rows] = await connection.query("select * from user where email = ?", [email])
 
+    console.log(rows)
+    if (!(rows.length === 0)) {
+      const role = rows[0].role
+      
         if (role === "professor") {
 
           const [rows] = await connection.query("select * from professors where email = ?", [email])
@@ -50,7 +52,11 @@ async function getUserByEmail(res, email){
 
         }
       }
-      return rows
+
+      return {
+            existingUser: false,
+            role: null
+          }
 
     } catch (error) {
 

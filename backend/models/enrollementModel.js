@@ -26,11 +26,35 @@ async function fetchCourses(res, dept) {
             return row.course_code.split("-")[0] === `${dept}`
         })
 
-        return courses
+        res.status(200).json({
+            success: "true",
+            data: courses
+        })
 
     } catch (error) {
 
         if (error) return res.status(500).json({ error: error.message })
+
+    }
+
+}
+
+async function enrolledCourses(res, student_id) {
+    
+    try {
+
+        const [rows] = await connection.query("select * from enrollments where student_id = ?", [student_id])
+        res.status(200).json({
+            success: "true",
+            data: rows
+        })
+        
+    } catch (error) {
+        
+        res.status(500).json({
+            success: "false",
+            message: error.message
+        })
 
     }
 
@@ -77,4 +101,45 @@ async function postEnrollment(res, student_id, course_code) {
     
 }
 
-module.exports = {fetchCourses, postEnrollment}
+async function deleteEnrolledCourses(res, student_id, course_code) {
+    
+    try {
+
+        const [row] = (await connection.query("select course_id from courses where course_code = ?", [course_code]))[0]
+        if(!row){
+            return res.json({
+                success: "failed",
+                message: `This course (${course_code}) does not exist`
+            })
+        }
+        const course_id = row.course_id
+        
+        const [existingCourse] = await connection.query("select * from enrollments where student_id = ? and course_id = ?", [student_id, course_id])
+        if(existingCourse.length === 0){
+
+            return res.json({
+                success: "failed",
+                message: `This course (${course_code}) is not enrolled by the student`
+            })
+            
+        }
+
+        await connection.query("delete from enrollments where student_id = ? and course_id = ?", [student_id, course_id])
+        const [rows] = await connection.query("select * from enrollments where student_id = ?", [student_id])
+
+        return res.status(200).json({
+            success: "success",
+            data: rows
+        })
+
+    } catch (error) {
+
+        if (error) return res.status(500).json({ error: error.message })
+
+    }
+
+}
+
+
+
+module.exports = {fetchCourses, postEnrollment, deleteEnrolledCourses, enrolledCourses}

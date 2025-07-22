@@ -1,6 +1,6 @@
 const express = require("express")
 const authenticationModule = express.Router()
-const {getUserByEmail, postUser} = require("../models/authenticationModel")
+const {getUserByEmail, postUser} = require("../../models/authenticationModel")
 
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
@@ -15,7 +15,8 @@ authenticationModule.post("/register", async(req, res) => {
         const {username, email, password, role } = req.body
 
         const existingUser = await getUserByEmail(res, email)
-        if (!(existingUser.length === 0)){
+        console.log(existingUser)
+        if (existingUser.existingUser){
             const error = new Error("User already exists")
             error.statusCode = 409
             throw error
@@ -43,7 +44,7 @@ authenticationModule.post("/register", async(req, res) => {
 
 })
 
-authenticationModule.post('/login', async (req, res) => {
+authenticationModule.post('/login', async (req, res, next) => {
 
     try {
 
@@ -51,7 +52,7 @@ authenticationModule.post('/login', async (req, res) => {
 
         const { role, existingUser} = await getUserByEmail(res, email)
 
-        if (existingUser.length === 0) return res.status(401).json({ error: 'User not found' })
+        if (!existingUser) return res.status(401).json({ error: 'User not found' })
         const user = existingUser[0]
 
         const idFieldMap = {
@@ -74,7 +75,7 @@ authenticationModule.post('/login', async (req, res) => {
             email: user.email,
             role: role,
         }
-        console.log(payload)
+
         const token = jwt.sign({payload: payload}, process.env.SECRET_KEY, { expiresIn: '1h' })
         return res.json({
             token,
