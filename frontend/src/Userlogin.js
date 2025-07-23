@@ -1,40 +1,75 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-
 export default function Userlogin() {
-  const [formData, setFormData] = useState({ useremail: '', password: '' });
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError(''); // Clear error on input change
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add login logic (e.g., API call)
-    console.log('Login:', formData);
-    navigate('/Professor');
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('http://localhost:4000/authentication/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error ${response.status}`);
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token); // Store JWT
+      localStorage.setItem('role', data.role); // Store role
+
+      // Navigate based on role
+      const rolePath = {
+        student: '/Student',
+        professor: '/Professor',
+        admin: '/Admin',
+      }[data.role];
+
+      if (!rolePath) throw new Error('Invalid role');
+      navigate(rolePath);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="login">
       <div className="right">
         <h1>Log In</h1>
+        {error && <p className="error">{error}</p>}
         <form onSubmit={handleSubmit}>
-          <p >
-            <i className="fa-solid fa-circle-user"></i>
+          <p>
+            <i className="fa-solid fa-envelope"></i>
             <input
               type="useremail"
-              name="useremail"
-              placeholder="Please Enter your mail Id"
-              value={formData.useremail}
+              name="email"
+              placeholder="Please Enter your Email"
+              value={formData.email}
               onChange={handleChange}
               required
             />
           </p>
           <p>
-            <i className="fa-solid fa-envelope"></i>
+            <i className="fa-solid fa-lock"></i>
             <input
               type="password"
               name="password"
@@ -44,7 +79,9 @@ export default function Userlogin() {
               required
             />
           </p>
-          <button type="submit">Submit</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Logging in...' : 'Submit'}
+          </button>
           <br />
           <Link to="/forgot-password" className="fg">
             Forgot password
@@ -57,7 +94,6 @@ export default function Userlogin() {
           </p>
         </form>
       </div>
-      
     </div>
   );
 }

@@ -2,6 +2,9 @@
 const express = require("express")
 const cors = require("cors")
 require("dotenv").config()
+const cors = require('cors');
+
+
 
 // importing modules
 const authenticationModule = require("./routes/authentication/authenticationModule")
@@ -18,6 +21,17 @@ app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+
+app.get("/", (req, res) => {
+    res.send("bye bye ")
+    console.log("jdkbsb")
+})
+// or, to allow only your frontend domain:
+app.use(cors({
+  origin: 'http://localhost:3000' // or your frontend URL
+}));
+
+// Your other middleware and routes
 // authenticationModule
 app.use("/", authenticationModule)
 
