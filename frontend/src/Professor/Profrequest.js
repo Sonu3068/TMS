@@ -64,7 +64,7 @@ export default function Profrequest() {
 
   return (
     <div  >
-    <div className="page-container">
+    <div className="page-container" style={{ marginLeft: "2.5rem" }}>
       <div className="form-container">
         <h2 className="form-title">
           Professor Course Time/Slot Change Request

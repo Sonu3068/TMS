@@ -13,7 +13,7 @@ export default function Profile(props) {
         style={{
           marginLeft:window.innerWidth < 768
               ? "2.5rem"
-              : "11.5rem"
+              : "2.5rem"
           
         }}
       >   <div className="profile-area ">
