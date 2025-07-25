@@ -23,6 +23,7 @@ export default function Profprofile() {
     <div className="profile-details ">
         <p><strong>Name:</strong> <span className="masked-text">***************</span></p>
         <p><strong>Institute Email:</strong> <span className="masked-text">*********@iiti.ac.in</span></p>
+        <p><strong>Department:</strong> <span className="masked-text">***************</span></p>
       </div></main>
       
     </div>

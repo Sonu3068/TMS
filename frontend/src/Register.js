@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-export default function Register() {
+export default function Register(props) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -47,7 +47,10 @@ export default function Register() {
       setFormData({ email: '', username: '', password: '', role: 'student' });
       navigate('/Userportal/Login');
     } catch (err) {
-      setError(err.message);
+      props.Setalert(err.message);
+     setTimeout(() => {
+      props.Setalert(null);
+     }, 2000); 
     } finally {
       setLoading(false);
     }
@@ -62,7 +65,7 @@ export default function Register() {
             {error}
             {error.includes('already exists') && (
               <>
-                {' '}
+            
                 <Link to="/Userportal/Login">Log in here</Link>.
               </>
             )}

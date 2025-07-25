@@ -1,161 +1,158 @@
 :root {
-  --bg: #f5f5ff;
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
-  --text: #1f2937;
-  --border: #d1d5db;
-  --input-bg: #ffffff;
-  --input-focus: #e0e7ff;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  /* Color palette */
+  --color-background: #ffffff;
+  --color-surface: #f9fafb;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-text: #333333;
+  --color-text-muted: #555555;
+  --color-error: #ef4444;
+  
+  /* Spacing & sizing */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --radius: 6px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  /* Typography */
+  --font-family: Arial, sans-serif;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
 }
 
-.m {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--bg);
-  padding: 1rem;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+body, input, button, select, label {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+}
+.m{
+  width:calc(100% - 2.5rem);
+}
 .enroll {
-  max-width: 500px;
-  width: 100%;
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 2rem;
+  background: var(--color-background);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) auto;
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
-  margin: 1rem;
+  width:80vw;
 }
 
 .enroll h1 {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 1.5rem;
   text-align: center;
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-size-lg);
+}
+
+.space-y-4 > * + * {
+  margin-top: var(--spacing-md);
 }
 
 .enter {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
 }
 
 .enter label {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text);
+  margin-bottom: var(--spacing-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
 }
 
-input[type="email"],
-input[type="fullname"] {
-  padding: 0.75rem;
-  width: 100%;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background-color: var(--input-bg);
-  font-size: 1rem;
-  color: var(--text);
-  transition: all 0.2s ease;
+.enter input {
+  padding: var(--spacing-md);
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  transition: border-color .2s;
 }
 
-input[type="email"]::placeholder,
-input[type="fullname"]::placeholder {
-  color: #9ca3af;
-  opacity: 1;
-}
-
-input[type="email"]:focus,
-input[type="fullname"]:focus {
-  border-color: var(--primary);
-  background-color: var(--input-bg);
+.enter input:focus {
+  border-color: var(--color-primary);
   outline: none;
-  box-shadow: 0 0 0 3px var(--input-focus);
 }
 
 .course {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  max-height: 200px;
-  overflow-y: auto;
-  padding: 0.5rem;
-  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--spacing-md);
 }
 
 .check {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
 }
 
-.check input[type="checkbox"] {
-  width: 1.25rem;
-  height: 1.25rem;
-  accent-color: var(--primary);
-  cursor: pointer;
+.check input {
+  margin-right: var(--spacing-sm);
 }
 
-.check label {
-  font-size: 1rem;
-  color: var(--text);
-  cursor: pointer;
-}
-
-button {
-  background-color: var(--primary);
-  color: #ffffff;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+button[type="submit"] {
   width: 100%;
+  padding: var(--spacing-md);
+  background: var(--color-primary);
+  color: var(--color-background);
+  border: none;
+  border-radius: var(--radius);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
 }
 
-button:hover {
-  background-color: var(--primary-hover);
+button[type="submit"]:hover {
+  background: var(--color-primary-hover);
 }
 
-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--input-focus);
+.enrolled-list {
+  margin-top: var(--spacing-lg);
 }
 
-/* Scrollbar styling for course list */
-.course::-webkit-scrollbar {
-  width: 8px;
+.enrolled-list h2 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-md);
 }
 
-.course::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
+.enrolled-list ul {
+  list-style: none;
 }
 
-.course::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 4px;
+.enrolled-list li {
+  background: var(--color-surface);
+  border: 1px solid #e5e7eb;
+  padding: var(--spacing-md);
+  border-radius: var(--radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
 }
 
-.course::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-hover);
+.enrolled-list button {
+  background: transparent;
+  border: none;
+  color: var(--color-error);
+  cursor: pointer;
+  font-weight: 600;
 }
 
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .enroll {
-    padding: 1.5rem;
+@media (min-width: 768px) {
+  .enter {
+    flex-direction: row;
+    align-items: center;
   }
 
-  .enroll h1 {
-    font-size: 1.5rem;
+  .enter label {
+    flex: 0 0 150px;
+    margin-bottom: 0;
   }
 
-  .course {
-    max-height: 150px;
+  .enter input {
+    flex: 1;
   }
 }
