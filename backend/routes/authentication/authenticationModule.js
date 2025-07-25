@@ -17,9 +17,11 @@ authenticationModule.post("/register", async(req, res) => {
         const existingUser = await getUserByEmail(res, email)
         console.log(existingUser)
         if (existingUser.existingUser){
-            const error = new Error("User already exists")
-            error.statusCode = 409
-            throw error
+            
+            return res.status(409).json({
+                success: false,
+                message: "Email already exists"
+            })
         }
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)

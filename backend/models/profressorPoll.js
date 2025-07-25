@@ -130,4 +130,31 @@ async function updatePoll(res, poll_id,  professor_id, course_code, timeslot_ids
 
 }
 
-module.exports = { getTimeslot, postPoll, updatePoll }
+async function deletePoll(res, poll_id, professor_id) {
+
+    try {
+
+    const [rows] = (await connection.query("select * from professorpolls where poll_id = ?", [poll_id]))[0]
+    
+    if (!(rows.professor_id === professor_id)) {
+
+        res.status(404).json({
+            success: false,
+            message: "Poll doesn't exist"
+        })
+
+    }
+
+    await connection.query("delete from professorpolls where poll_id = ?", [poll_id])
+    await connection.query("delete from polloptions where poll_id = ?", [poll_id])
+    
+        
+    } catch (error) {
+
+        if (error) return res.status(500).json({message: error.message})
+        
+    }
+    
+}
+
+module.exports = { getTimeslot, postPoll, updatePoll, deletePoll }

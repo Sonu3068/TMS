@@ -67,7 +67,6 @@ async function getUserByEmail(res, email){
 
 async function postUser(res, name, email, password_hash, role) {
   try {
-
     
     if (role === "professor") {
       
