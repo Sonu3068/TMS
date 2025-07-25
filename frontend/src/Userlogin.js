@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-export default function Userlogin() {
+export default function Userlogin(props) {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -45,7 +45,10 @@ export default function Userlogin() {
       if (!rolePath) throw new Error('Invalid role');
       navigate(rolePath);
     } catch (err) {
-      setError(err.message);
+     props.Setalert(err.message);
+     setTimeout(() => {
+      props.Setalert(null);
+     }, 2000); 
     } finally {
       setLoading(false);
     }
