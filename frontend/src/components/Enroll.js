@@ -1,22 +1,47 @@
 import React, { useState, useEffect } from "react";
 import "./Enroll.css";
 
+const token = localStorage.getItem('token');
+const params = {dept: "ME"}
+const queryString = new URLSearchParams(params).toString()
+
 export default function Enroll() {
   const [formData, setFormData] = useState({ fullname: "", email: "", courses: [] });
-  const [available, setAvailable] = useState([]);
+  const [available, setavailable] = useState([{course_code: "hi", course_name: "bye"}]);
   const [enrolled, setEnrolled] = useState([]);
 
   // Fetch available courses
   useEffect(() => {
-    fetch("http://localhost:4000/students/courses")
-      .then(res => res.json())
-      .then(setAvailable)
+    fetch(`http://localhost:4000/student/courses?${queryString}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add the Authorization header
+        'Authorization': `Bearer ${token}`
+      }
+    }
+  )
+  .then(res => res.json())
+  .then(
+    data=>
+      {
+        console.log(data)
+        // setavailable(data)
+        }
+        )
+  .then(() => console.log(available))
       .catch(console.error);
-  }, []);
+  console.log("hi")
 
+  }, []);
   // Fetch currently enrolled courses
   useEffect(() => {
-    fetch("http://localhost:4000/students/enrollment")
+    fetch("http://localhost:4000/student/enrollment", {
+      method: "GET",
+      headers: { 
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
+      }})
       .then(res => res.json())
       .then(setEnrolled)
       .catch(console.error);
@@ -40,27 +65,43 @@ export default function Enroll() {
     e.preventDefault();
     if (formData.fullname && formData.email && formData.courses.length) {
       formData.courses.forEach(code =>
-        fetch("http://localhost:4000/students/enrollment", {
+        fetch("http://localhost:4000/student/enrollment", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify({ course_code: code })
         })
       );
       setFormData(prev => ({ ...prev, courses: [] }));
       // Refresh enrolled list
-      fetch("http://localhost:4000/students/enrollment")
+      fetch("http://localhost:4000/student/enrollment", {
+      method: "GET",
+      headers: { 
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
+      }})
         .then(res => res.json())
         .then(setEnrolled);
     }
   };
 
   const removeCourse = course_code => {
-    fetch("http://localhost:4000/students/enrollment", {
+    fetch("http://localhost:4000/student/enrollment", {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({ course_code })
     }).then(() =>
-      fetch("http://localhost:4000/students/enrollment")
+      fetch("http://localhost:4000/student/courses", {
+      method: "GET",
+      headers: { 
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
+      }})
         .then(res => res.json())
         .then(setEnrolled)
     );
@@ -70,7 +111,7 @@ export default function Enroll() {
     <div className="m">
       <main style={{ marginLeft: window.innerWidth < 768 ? "2.5rem" : "11.5rem" }}>
         <div className="enroll">
-          <h1>Course Enrollment</h1>
+          <h1>Course courses</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name & Email */}
             <div className="enter">
@@ -102,14 +143,11 @@ export default function Enroll() {
 
           {/* Enrolled Courses */}
           <h2>Enrolled Courses</h2>
-          <ul>
+          {/* <ul>
             {enrolled.map(c => (
-              <li key={c.course_code}>
-                {c.course_name}
-                <button onClick={() => removeCourse(c.course_code)}>Remove</button>
-              </li>
+              <div>hi</div>
             ))}
-          </ul>
+          </ul> */}
         </div>
       </main>
     </div>

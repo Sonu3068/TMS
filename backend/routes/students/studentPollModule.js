@@ -36,6 +36,6 @@ studentPoll.post("vote", async(req, res) => {
 
     }
 
-}
+})
 
 module.exports = studentPoll

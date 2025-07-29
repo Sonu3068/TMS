@@ -10,12 +10,13 @@ const studentEnrollmentModule = express.Router()
 // get courses
 studentEnrollmentModule.get("/courses", async (req, res)=> {
     
-    const department = req.body.dept
+    console.log(req.query)
+    const department = req.query.dept
     await fetchCourses(res, department)
     
 })
 
-// get enrolled courses
+// get enrolled coursess
 studentEnrollmentModule.get("/enrollment", async (req, res)=> {
 
     const student_id = req.user.payload.user_id
@@ -42,6 +43,5 @@ studentEnrollmentModule.delete("/enrollment", async (req, res)=> {
     await deleteEnrolledCourses(res, student_id, course_code)
 
 })
-
 
 module.exports = studentEnrollmentModule

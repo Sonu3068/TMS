@@ -32,13 +32,24 @@ async function getProfile (res, student_id) {
 
 }
 
-async function updateProfile (res, student_id, ) {
+async function updateProfile (res, student_id, username, department, academic_year) {
 
     try {
 
         const [rows] = await connection.query("select * from students where student_id = ?", [student_id])
-        const profile = rows[0]
+        const existingProfile = rows[0]
+
+        if(!existingProfile){
+            return res.status(404).json({
+                success: false,
+                message: "Professor ID doesn't exist",
+            })
+        }
+
+        await connection.query("update table students set name = ?, department = ?, academic_year = ?", [username, department, academic_year])
         
+        const [profile] = (await connection.query("select * from students where student_id = ?", [student_id]))[0]
+
         res.status(200).json({
             success: true,
             message: "Professor data is updated",
@@ -52,5 +63,4 @@ async function updateProfile (res, student_id, ) {
     }
 
 }
-
 module.exports = { getProfile, updateProfile }

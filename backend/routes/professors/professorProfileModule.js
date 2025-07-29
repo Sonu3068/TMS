@@ -27,8 +27,8 @@ professorProfile.patch("profile", async (req, res) => {
     try {
 
         const professor_id = req.user.payload.user_id
-        const {} = req.body
-        await updateProfile(res, professor_id)
+        const {username, department} = req.body
+        await updateProfile(res, professor_id, username, department)
         
     } catch (error) {
         

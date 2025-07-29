@@ -26,9 +26,9 @@ adminProfile.patch("profile", async (req, res) => {
 
     try {
 
-        const professor_id = req.user.payload.user_id
-        const {} = req.body
-        await updateProfile(res, professor_id)
+        const admin_id = req.user.payload.user_id
+        const {username} = req.body
+        await updateProfile(res, admin_id, username)
         
     } catch (error) {
         

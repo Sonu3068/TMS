@@ -11,8 +11,8 @@ studentProfile.get("profile", async (req, res) => {
 
     try {
 
-        const professor_id = req.user.payload.user_id
-        await getProfile(res, professor_id)
+        const student_id = req.user.payload.user_id
+        await getProfile(res, student_id)
         
     } catch (error) {
         
@@ -26,9 +26,9 @@ studentProfile.patch("profile", async (req, res) => {
 
     try {
 
-        const professor_id = req.user.payload.user_id
-        const {} = req.body
-        await updateProfile(res, professor_id)
+        const student_id = req.user.payload.user_id
+        const {username, department, academic_year} = req.body
+        await updateProfile(res, student_id, username, department, academic_year)
         
     } catch (error) {
         
