@@ -1,61 +1,111 @@
 import React, { useState, useEffect } from "react";
 import "./Enroll.css";
 
+// Declare token and params outside the component as intended
 const token = localStorage.getItem('token');
-const params = {dept: "ME"}
-const queryString = new URLSearchParams(params).toString()
+const params = { dept: "ME" };
+const queryString = new URLSearchParams(params).toString();
 
 export default function Enroll() {
   const [formData, setFormData] = useState({ fullname: "", email: "", courses: [] });
-  const [available, setAvailable] = useState([]); // Initialize with an empty array
+  const [available, setAvailable] = useState([]);
   const [enrolled, setEnrolled] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch available courses
+  // Effect to fetch available courses on component mount
   useEffect(() => {
-    fetch(`http://localhost:4000/student/courses?${queryString}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    })
-    .then(res => {
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      return res.json();
-    })
-    .then(data => {
-      console.log("Fetched available courses data:", data); // This log shows the actual data from the fetch
-      setAvailable(data); // This schedules the state update
-    })
-    .catch(error => console.error("Error fetching available courses:", error));
-    console.log("Fetch available courses initiated."); // This runs when the effect is first called
-  }, []); // Empty dependency array means this runs once on mount
+    const fetchAvailableCourses = async () => {
+      setLoading(true);
+      setError(null);
 
-  // --- NEW useEffect for logging available state ---
-  // This effect runs whenever 'available' state changes
+      if (!token) {
+        setError("Authorization token not found. Please log in.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:4000/student/courses?${queryString}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: 'Failed to parse error response' }));
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Fetched raw available courses data:", data);
+
+        if (data && Array.isArray(data.data)) {
+          setAvailable(data.data);
+        } else if (Array.isArray(data)) {
+          setAvailable(data);
+        } else {
+          throw new Error("Invalid data format received for available courses. Expected an array or object with a 'data' array.");
+        }
+
+      } catch (err) {
+        console.error("Error fetching available courses:", err);
+        setError(`Failed to load available courses: ${err.message}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAvailableCourses();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // <--- Add this line to ignore the warning for this specific useEffect
+
+  // Effect to log updated 'available' state (for debugging purposes only)
   useEffect(() => {
     console.log("Available courses state updated:", available);
-  }, [available]); // Dependency array includes 'available'
+  }, [available]);
 
-  // Fetch currently enrolled courses
+  // Effect to fetch currently enrolled courses on component mount
   useEffect(() => {
-    fetch("http://localhost:4000/student/enrollment", {
-      method: "GET",
-      headers: { 
-        "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
-      }})
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+    const fetchEnrolledCourses = async () => {
+      if (!token) {
+        return;
+      }
+      try {
+        const response = await fetch("http://localhost:4000/student/enrollment", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: 'Failed to parse error response' }));
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
         }
-        return res.json();
-      })
-      .then(setEnrolled)
-      .catch(error => console.error("Error fetching enrolled courses:", error));
-  }, []); // Empty dependency array means this runs once on mount
+
+        const data = await response.json();
+        console.log("Fetched raw enrolled courses data:", data);
+
+        if (data && Array.isArray(data.data)) {
+            setEnrolled(data.data);
+        } else if (Array.isArray(data)) {
+            setEnrolled(data);
+        } else {
+            throw new Error("Invalid data format received for enrolled courses.");
+        }
+
+      } catch (err) {
+        console.error("Error fetching enrolled courses:", err);
+      }
+    };
+
+    fetchEnrolledCourses();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // <--- Add this line to ignore the warning for this specific useEffect
 
 
   const handleChange = e => {
@@ -72,146 +122,196 @@ export default function Enroll() {
     }
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    if (formData.fullname && formData.email && formData.courses.length) {
-      // Use Promise.all to wait for all enrollments to complete
-      Promise.all(
-        formData.courses.map(code =>
-          fetch("http://localhost:4000/student/enrollment", {
-            method: "POST",
-            headers: { 
-              "Content-Type": "application/json",
-              'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ course_code: code })
-          })
-          .then(res => {
-            if (!res.ok) {
-                // Log error details if the response is not OK
-                return res.json().then(err => { throw new Error(err.message || 'Failed to enroll course'); });
-            }
-            return res.json();
-          })
-          .catch(error => {
-              console.error(`Error enrolling course ${code}:`, error);
-              // Handle specific error for this course, e.g., show a toast notification
-          })
-        )
-      )
-      .then(() => {
-        setFormData(prev => ({ ...prev, courses: [] })); // Clear selected courses after all enrollments
-        // Refresh enrolled list AFTER all enrollments are attempted
-        fetch("http://localhost:4000/student/enrollment", {
-          method: "GET",
-          headers: { 
+    if (!formData.fullname || !formData.email || formData.courses.length === 0) {
+      alert("Please fill in your name, email, and select at least one course.");
+      return;
+    }
+
+    if (!token) {
+        alert("Authorization token not found. Please log in.");
+        return;
+    }
+
+    try {
+      const enrollmentPromises = formData.courses.map(async (courseCode) => {
+        const response = await fetch("http://localhost:4000/student/enrollment", {
+          method: "POST",
+          headers: {
             "Content-Type": "application/json",
             'Authorization': `Bearer ${token}`
-          }})
-          .then(res => {
-            if (!res.ok) {
-              throw new Error(`HTTP error! status: ${res.status}`);
-            }
-            return res.json();
-          })
-          .then(setEnrolled)
-          .catch(error => console.error("Error refreshing enrolled courses:", error));
-      })
-      .catch(error => {
-          console.error("One or more enrollment fetches failed:", error);
+          },
+          body: JSON.stringify({ course_code: courseCode })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: `Failed to parse error for ${courseCode}` }));
+          throw new Error(errorData.message || `Failed to enroll in ${courseCode}. Status: ${response.status}`);
+        }
+        return response.json();
       });
-    } else {
-        console.warn("Please fill in all fields and select at least one course.");
+
+      await Promise.all(enrollmentPromises);
+
+      setFormData(prev => ({ ...prev, courses: [] }));
+
+      const refreshResponse = await fetch("http://localhost:4000/student/enrollment", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!refreshResponse.ok) {
+        const errorData = await refreshResponse.json().catch(() => ({ message: 'Failed to parse refresh error' }));
+        throw new Error(errorData.message || `Failed to refresh enrolled courses after enrollment. Status: ${refreshResponse.status}`);
+      }
+
+      const refreshedEnrolledData = await refreshResponse.json();
+      if (refreshedEnrolledData && Array.isArray(refreshedEnrolledData.data)) {
+          setEnrolled(refreshedEnrolledData.data);
+      } else if (Array.isArray(refreshedEnrolledData)) {
+          setEnrolled(refreshedEnrolledData);
+      } else {
+          throw new Error("Invalid data format received when refreshing enrolled courses after enrollment.");
+      }
+      alert("Courses enrolled successfully!");
+
+    } catch (err) {
+      console.error("Enrollment failed:", err);
+      alert(`Error during enrollment: ${err.message}`);
     }
   };
 
-  const removeCourse = course_code => {
-    fetch("http://localhost:4000/student/enrollment", {
-      method: "DELETE",
-      headers: { 
-        "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ course_code })
-    })
-    .then(res => {
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+  const removeCourse = async (course_code) => {
+    if (!window.confirm(`Are you sure you want to drop ${course_code}?`)) {
+      return;
+    }
+
+    if (!token) {
+        alert("Authorization token not found. Please log in.");
+        return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:4000/student/enrollment", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ course_code })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: `Failed to parse error for ${course_code}` }));
+        throw new Error(errorData.message || `Failed to drop course ${course_code}. Status: ${response.status}`);
       }
-      return res.json();
-    })
-    .then(() => {
-      // After successful deletion, refresh the enrolled courses list
-      fetch("http://localhost:4000/student/enrollment", { // Changed from /student/courses to /student/enrollment
-      method: "GET",
-      headers: { 
-        "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
-      }})
-        .then(res => {
-          if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
-          return res.json();
-        })
-        .then(setEnrolled)
-        .catch(error => console.error("Error refreshing enrolled courses after removal:", error));
-    })
-    .catch(error => console.error("Error removing course:", error));
+
+      await response.json();
+
+      const refreshResponse = await fetch("http://localhost:4000/student/enrollment", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!refreshResponse.ok) {
+        const errorData = await refreshResponse.json().catch(() => ({ message: 'Failed to parse refresh error' }));
+        throw new Error(errorData.message || `Failed to refresh enrolled courses after drop. Status: ${refreshResponse.status}`);
+      }
+
+      const refreshedEnrolledData = await refreshResponse.json();
+      if (refreshedEnrolledData && Array.isArray(refreshedEnrolledData.data)) {
+          setEnrolled(refreshedEnrolledData.data);
+      } else if (Array.isArray(refreshedEnrolledData)) {
+          setEnrolled(refreshedEnrolledData);
+      } else {
+          throw new Error("Invalid data format received when refreshing enrolled courses after drop.");
+      }
+      alert(`Course ${course_code} dropped successfully!`);
+
+    } catch (err) {
+      console.error("Error removing course:", err);
+      alert(`Error dropping course: ${err.message}`);
+    }
   };
 
   return (
     <div className="m">
       <main style={{ marginLeft: window.innerWidth < 768 ? "2.5rem" : "11.5rem" }}>
         <div className="enroll">
-          <h1>Course Enrollment</h1> {/* Changed from 'Course courses' for clarity */}
+          <h1>Course Enrollment</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name & Email */}
             <div className="enter">
-              <label>Full Name</label>
-              <input name="fullname" value={formData.fullname} onChange={handleChange} placeholder="Enter your name" />
+              <label htmlFor="fullname">Full Name</label>
+              <input
+                id="fullname"
+                name="fullname"
+                value={formData.fullname}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                required
+              />
             </div>
             <div className="enter">
-              <label>Email</label>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" />
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                required
+              />
             </div>
+
             <h2>Select Courses</h2>
             <div className="course">
-              {available.length > 0 ? ( // Conditionally render if available courses exist
+              {loading ? (
+                <p>Loading available courses...</p>
+              ) : error ? (
+                <p className="error-message" style={{ color: 'red' }}>{error}</p>
+              ) : available.length > 0 ? (
                 available.map(c => (
                   <div key={c.course_code} className="check">
                     <input
                       type="checkbox"
                       name="courses"
                       value={c.course_code}
-                      id={c.course_code}
+                      id={`course-${c.course_code}`}
                       checked={formData.courses.includes(c.course_code)}
                       onChange={handleChange}
                     />
-                    <label htmlFor={c.course_code}>{c.course_name}</label>
+                    <label htmlFor={`course-${c.course_code}`}>{c.course_name}</label>
                   </div>
                 ))
               ) : (
-                <p>No available courses to display.</p> // Message if no courses are available
+                <p>No available courses to display.</p>
               )}
             </div>
-            <button type="submit" className="your-button-styles">Enroll Now</button> {/* Add your actual button styles */}
+            <button type="submit" className="your-button-styles">Enroll Now</button>
           </form>
 
-          {/* Enrolled Courses */}
           <h2>Enrolled Courses</h2>
-            <ul>
-            {enrolled.length > 0 ? ( // Conditionally render if enrolled courses exist
+          <ul>
+            {enrolled.length > 0 ? (
               enrolled.map(c => (
-                <li key={c.course_code}> {/* Use <li> for list items and c.course_code for key */}
+                <li key={c.course_code}>
                   {c.course_name} ({c.course_code})
                   <button onClick={() => removeCourse(c.course_code)}>Remove</button>
                 </li>
               ))
             ) : (
-              <p>No courses currently enrolled.</p> 
+              <p>No courses currently enrolled.</p>
             )}
-          </ul> 
+          </ul>
         </div>
       </main>
     </div>
