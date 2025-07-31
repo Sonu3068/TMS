@@ -209,7 +209,7 @@ export default function Enroll() {
                 </li>
               ))
             ) : (
-              <p>No courses currently enrolled.</p> // Message if no courses are enrolled
+              <p>No courses currently enrolled.</p> 
             )}
           </ul> 
         </div>
