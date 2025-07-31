@@ -105,16 +105,28 @@ export default function Enroll(props) {
       props.Setalert({mssg:"Please select at least one course.", result:"warning"});
       setTimeout(() => {
         props.Setalert(null);
-      }, 2000); 
+      }, 2000);
       return;
     }
     if (!token) {
       props.Setalert({mssg:"Authorization token not found. Please log in.", result:"danger"});
       setTimeout(() => {
         props.Setalert(null);
-      }, 2000); 
+      }, 2000);
       return;
     }
+    
+    // Check for courses that are already enrolled
+    for (const courseCode of formData.courses) {
+      if (enrolledCourseCodes.includes(courseCode)) {
+        props.Setalert({mssg:`Course ${courseCode} is already enrolled!`, result:"warning"});
+        setTimeout(() => {
+          props.Setalert(null);
+        }, 2000);
+        return; // Prevent enrollment if a duplicate is found
+      }
+    }
+
     try {
       const enrollmentPromises = formData.courses.map(async (courseCode) => {
         const response = await fetch("http://localhost:4000/student/enrollment", {
@@ -133,21 +145,19 @@ export default function Enroll(props) {
       });
       await Promise.all(enrollmentPromises);
       
-      // Update enrolled courses state directly after successful enrollment
       setEnrolledCourseCodes(prevCodes => [...prevCodes, ...formData.courses]);
       
-      // Clear the form and show success message
       setFormData(prev => ({ ...prev, courses: [] }));
       props.Setalert({mssg:"Courses enrolled successfully!",result:"success"});
       setTimeout(() => {
         props.Setalert(null);
-      }, 2000); 
+      }, 2000);
     } catch (err) {
       console.error("Enrollment failed:", err);
       props.Setalert({mssg:`Error during enrollment: ${err.message}`,result:"danger"});
       setTimeout(() => {
         props.Setalert(null);
-      }, 2000); 
+      }, 2000);
     }
   };
 
@@ -159,7 +169,7 @@ export default function Enroll(props) {
       props.Setalert({mssg:"Authorization token not found. Please log in.",result:"danger"});
       setTimeout(() => {
         props.Setalert(null);
-      }, 2000); 
+      }, 2000);
       return;
     }
     try {
@@ -180,13 +190,13 @@ export default function Enroll(props) {
       props.Setalert({mssg:`Course ${course_code} dropped successfully!`,result:"success"});
       setTimeout(() => {
         props.Setalert(null);
-      }, 2000); 
+      }, 2000);
     } catch (err) {
       console.error("Error removing course:", err);
       props.Setalert({mssg:`Error dropping course: ${err.message}`,result:"danger"});
       setTimeout(() => {
         props.Setalert(null);
-      }, 2000); 
+      }, 2000);
     }
   };
 
@@ -214,7 +224,7 @@ export default function Enroll(props) {
                       checked={formData.courses.includes(c.course_code)}
                       onChange={handleChange}
                     />
-                    <label htmlFor={`course-${c.course_code}`}>{c.course_name}{c.course_code}</label>
+                    <label htmlFor={`course-${c.course_code}`}>{c.course_name}</label>
                   </div>
                 ))
               ) : (
