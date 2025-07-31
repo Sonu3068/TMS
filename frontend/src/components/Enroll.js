@@ -6,25 +6,29 @@ const token = localStorage.getItem('token');
 const params = { dept: "ME" };
 const queryString = new URLSearchParams(params).toString();
 
-export default function Enroll() {
-  const [formData, setFormData] = useState({ fullname: "", email: "", courses: [] });
+export default function Enroll(props) {
+  // formData state now only tracks selected courses
+  const [formData, setFormData] = useState({ courses: [] });
   const [available, setAvailable] = useState([]);
-  const [enrolled, setEnrolled] = useState([]);
+  const [enrolledCourseCodes, setEnrolledCourseCodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Effect to fetch available courses on component mount
+  // Computed state for enrolled courses with full details
+  const enrolledCoursesWithDetails = available.filter(course =>
+    enrolledCourseCodes.includes(course.course_code)
+  );
+
+  // Effect to fetch available courses
   useEffect(() => {
     const fetchAvailableCourses = async () => {
       setLoading(true);
       setError(null);
-
       if (!token) {
         setError("Authorization token not found. Please log in.");
         setLoading(false);
         return;
       }
-
       try {
         const response = await fetch(`http://localhost:4000/student/courses?${queryString}`, {
           method: 'GET',
@@ -33,23 +37,18 @@ export default function Enroll() {
             'Authorization': `Bearer ${token}`
           }
         });
-
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({ message: 'Failed to parse error response' }));
           throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
         }
-
         const data = await response.json();
-        console.log("Fetched raw available courses data:", data);
-
         if (data && Array.isArray(data.data)) {
           setAvailable(data.data);
         } else if (Array.isArray(data)) {
           setAvailable(data);
         } else {
-          throw new Error("Invalid data format received for available courses. Expected an array or object with a 'data' array.");
+          throw new Error("Invalid data format received for available courses.");
         }
-
       } catch (err) {
         console.error("Error fetching available courses:", err);
         setError(`Failed to load available courses: ${err.message}`);
@@ -57,17 +56,10 @@ export default function Enroll() {
         setLoading(false);
       }
     };
-
     fetchAvailableCourses();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // <--- Add this line to ignore the warning for this specific useEffect
+  }, []);
 
-  // Effect to log updated 'available' state (for debugging purposes only)
-  useEffect(() => {
-    console.log("Available courses state updated:", available);
-  }, [available]);
-
-  // Effect to fetch currently enrolled courses on component mount
+  // Effect to fetch currently enrolled courses
   useEffect(() => {
     const fetchEnrolledCourses = async () => {
       if (!token) {
@@ -81,59 +73,55 @@ export default function Enroll() {
             'Authorization': `Bearer ${token}`
           }
         });
-
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({ message: 'Failed to parse error response' }));
           throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
         }
-
         const data = await response.json();
-        console.log("Fetched raw enrolled courses data:", data);
-
+        let codes = [];
         if (data && Array.isArray(data.data)) {
-            setEnrolled(data.data);
+            // Assuming the enrolled API returns an array of objects with a 'course_code' property
+            codes = data.data.map(item => item.course_code);
         } else if (Array.isArray(data)) {
-            setEnrolled(data);
+            codes = data.map(item => item.course_code);
         } else {
             throw new Error("Invalid data format received for enrolled courses.");
         }
-
+        setEnrolledCourseCodes(codes);
       } catch (err) {
         console.error("Error fetching enrolled courses:", err);
       }
     };
-
     fetchEnrolledCourses();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // <--- Add this line to ignore the warning for this specific useEffect
+  }, []);
 
-
+  // handleChange now only handles checkbox state
   const handleChange = e => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      setFormData(prev => ({
-        ...prev,
-        courses: checked
-          ? [...prev.courses, value]
-          : prev.courses.filter(c => c !== value)
-      }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
-    }
+    const { value, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      courses: checked
+        ? [...prev.courses, value]
+        : prev.courses.filter(c => c !== value)
+    }));
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
-    if (!formData.fullname || !formData.email || formData.courses.length === 0) {
-      alert("Please fill in your name, email, and select at least one course.");
+    if (formData.courses.length === 0) {
+      props.setalert({mssg:"Please select at least one course.", result:"warning"});
+      setTimeout(() => {
+        props.setalert(null);
+      }, 2000); 
       return;
     }
-
     if (!token) {
-        alert("Authorization token not found. Please log in.");
-        return;
+      props.setalert({mssg:"Authorization token not found. Please log in.", result:"danger"});
+      setTimeout(() => {
+        props.setalert(null);
+      }, 2000); 
+      return;
     }
-
     try {
       const enrollmentPromises = formData.courses.map(async (courseCode) => {
         const response = await fetch("http://localhost:4000/student/enrollment", {
@@ -144,18 +132,14 @@ export default function Enroll() {
           },
           body: JSON.stringify({ course_code: courseCode })
         });
-
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({ message: `Failed to parse error for ${courseCode}` }));
           throw new Error(errorData.message || `Failed to enroll in ${courseCode}. Status: ${response.status}`);
         }
         return response.json();
       });
-
       await Promise.all(enrollmentPromises);
-
       setFormData(prev => ({ ...prev, courses: [] }));
-
       const refreshResponse = await fetch("http://localhost:4000/student/enrollment", {
         method: "GET",
         headers: {
@@ -163,25 +147,19 @@ export default function Enroll() {
           'Authorization': `Bearer ${token}`
         }
       });
-
-      if (!refreshResponse.ok) {
-        const errorData = await refreshResponse.json().catch(() => ({ message: 'Failed to parse refresh error' }));
-        throw new Error(errorData.message || `Failed to refresh enrolled courses after enrollment. Status: ${refreshResponse.status}`);
-      }
-
-      const refreshedEnrolledData = await refreshResponse.json();
-      if (refreshedEnrolledData && Array.isArray(refreshedEnrolledData.data)) {
-          setEnrolled(refreshedEnrolledData.data);
-      } else if (Array.isArray(refreshedEnrolledData)) {
-          setEnrolled(refreshedEnrolledData);
-      } else {
-          throw new Error("Invalid data format received when refreshing enrolled courses after enrollment.");
-      }
-      alert("Courses enrolled successfully!");
-
+      const refreshedData = await refreshResponse.json();
+      const updatedCodes = Array.isArray(refreshedData.data) ? refreshedData.data.map(c => c.course_code) : (Array.isArray(refreshedData) ? refreshedData.map(c => c.course_code) : []);
+      setEnrolledCourseCodes(updatedCodes);
+      props.setalert({mssg:"Courses enrolled successfully!",result:"success"});
+      setTimeout(() => {
+        props.setalert(null);
+      }, 2000); 
     } catch (err) {
       console.error("Enrollment failed:", err);
-      alert(`Error during enrollment: ${err.message}`);
+      props.setalert({mssg:`Error during enrollment: ${err.message}`,result:"danger"});
+      setTimeout(() => {
+        props.setalert(null);
+      }, 2000); 
     }
   };
 
@@ -189,12 +167,13 @@ export default function Enroll() {
     if (!window.confirm(`Are you sure you want to drop ${course_code}?`)) {
       return;
     }
-
     if (!token) {
-        alert("Authorization token not found. Please log in.");
-        return;
+      props.setalert({mssg:"Authorization token not found. Please log in.",result:"danger"});
+      setTimeout(() => {
+        props.setalert(null);
+      }, 2000); 
+      return;
     }
-
     try {
       const response = await fetch("http://localhost:4000/student/enrollment", {
         method: "DELETE",
@@ -204,40 +183,22 @@ export default function Enroll() {
         },
         body: JSON.stringify({ course_code })
       });
-
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: `Failed to parse error for ${course_code}` }));
         throw new Error(errorData.message || `Failed to drop course ${course_code}. Status: ${response.status}`);
       }
-
       await response.json();
-
-      const refreshResponse = await fetch("http://localhost:4000/student/enrollment", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!refreshResponse.ok) {
-        const errorData = await refreshResponse.json().catch(() => ({ message: 'Failed to parse refresh error' }));
-        throw new Error(errorData.message || `Failed to refresh enrolled courses after drop. Status: ${refreshResponse.status}`);
-      }
-
-      const refreshedEnrolledData = await refreshResponse.json();
-      if (refreshedEnrolledData && Array.isArray(refreshedEnrolledData.data)) {
-          setEnrolled(refreshedEnrolledData.data);
-      } else if (Array.isArray(refreshedEnrolledData)) {
-          setEnrolled(refreshedEnrolledData);
-      } else {
-          throw new Error("Invalid data format received when refreshing enrolled courses after drop.");
-      }
-      alert(`Course ${course_code} dropped successfully!`);
-
+      setEnrolledCourseCodes(prevCodes => prevCodes.filter(code => code !== course_code));
+      props.setalert({mssg:`Course ${course_code} dropped successfully!`,result:"success"});
+      setTimeout(() => {
+        props.setalert(null);
+      }, 2000); 
     } catch (err) {
       console.error("Error removing course:", err);
-      alert(`Error dropping course: ${err.message}`);
+      props.setalert({mssg:`Error dropping course: ${err.message}`,result:"danger"});
+      setTimeout(() => {
+        props.setalert(null);
+      }, 2000); 
     }
   };
 
@@ -247,31 +208,7 @@ export default function Enroll() {
         <div className="enroll">
           <h1>Course Enrollment</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Name & Email */}
-            <div className="enter">
-              <label htmlFor="fullname">Full Name</label>
-              <input
-                id="fullname"
-                name="fullname"
-                value={formData.fullname}
-                onChange={handleChange}
-                placeholder="Enter your name"
-                required
-              />
-            </div>
-            <div className="enter">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-
+            
             <h2>Select Courses</h2>
             <div className="course">
               {loading ? (
@@ -301,11 +238,11 @@ export default function Enroll() {
 
           <h2>Enrolled Courses</h2>
           <ul>
-            {enrolled.length > 0 ? (
-              enrolled.map(c => (
+            {enrolledCoursesWithDetails.length > 0 ? (
+              enrolledCoursesWithDetails.map(c => (
                 <li key={c.course_code}>
                   {c.course_name} ({c.course_code})
-                  <button onClick={() => removeCourse(c.course_code)} className="">Remove</button>
+                  <button onClick={() => removeCourse(c.course_code)}>Remove</button>
                 </li>
               ))
             ) : (

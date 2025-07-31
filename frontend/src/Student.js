@@ -8,8 +8,10 @@ import Profile from './components/Profile';
 import Enroll from './components/Enroll';
 import Timetable from './components/Timetable';
 import Polls from './components/Polls';
+import StuAlert from './components/StuAlert';
 
 export default function Student() {
+  const [alert, Setalert] = useState(null);
   const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleSidebar = () => {
@@ -19,6 +21,7 @@ export default function Student() {
   return (
     <>
       <Header />
+      <StuAlert alert={alert}/>
       <div className="student-container">
         <Left isExpanded={isExpanded} toggleSidebar={toggleSidebar} />
         <div className="content">
@@ -26,7 +29,7 @@ export default function Student() {
             <Route path="/" element={<Navigate to="Dashboard" />} />
             <Route path="Dashboard" element={<Dashboard isExpanded={isExpanded} />} />
             <Route path="Profile" element={<Profile isExpanded={isExpanded} />} />
-            <Route path="Enroll" element={<Enroll isExpanded={isExpanded} />} />
+            <Route path="Enroll" element={<Enroll isExpanded={isExpanded} alert={alert} Setalert={Setalert} />} />
             <Route path="Timetable" element={<Timetable isExpanded={isExpanded} />} />
             <Route path="Polls" element={<Polls isExpanded={isExpanded} />} />
           </Routes>
