@@ -1,25 +1,21 @@
 import React, { useState, useEffect } from "react";
 import "./Enroll.css";
 
-// Declare token and params outside the component as intended
 const token = localStorage.getItem('token');
 const params = { dept: "ME" };
 const queryString = new URLSearchParams(params).toString();
 
 export default function Enroll(props) {
-  // formData state now only tracks selected courses
   const [formData, setFormData] = useState({ courses: [] });
   const [available, setAvailable] = useState([]);
   const [enrolledCourseCodes, setEnrolledCourseCodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Computed state for enrolled courses with full details
   const enrolledCoursesWithDetails = available.filter(course =>
     enrolledCourseCodes.includes(course.course_code)
   );
 
-  // Effect to fetch available courses
   useEffect(() => {
     const fetchAvailableCourses = async () => {
       setLoading(true);
@@ -59,7 +55,6 @@ export default function Enroll(props) {
     fetchAvailableCourses();
   }, []);
 
-  // Effect to fetch currently enrolled courses
   useEffect(() => {
     const fetchEnrolledCourses = async () => {
       if (!token) {
@@ -80,7 +75,6 @@ export default function Enroll(props) {
         const data = await response.json();
         let codes = [];
         if (data && Array.isArray(data.data)) {
-            // Assuming the enrolled API returns an array of objects with a 'course_code' property
             codes = data.data.map(item => item.course_code);
         } else if (Array.isArray(data)) {
             codes = data.map(item => item.course_code);
@@ -95,7 +89,6 @@ export default function Enroll(props) {
     fetchEnrolledCourses();
   }, []);
 
-  // handleChange now only handles checkbox state
   const handleChange = e => {
     const { value, checked } = e.target;
     setFormData(prev => ({
@@ -109,16 +102,16 @@ export default function Enroll(props) {
   const handleSubmit = async e => {
     e.preventDefault();
     if (formData.courses.length === 0) {
-      props.Setalert({mssg:"Please select at least one course.", result:"warning"});
+      props.setalert({mssg:"Please select at least one course.", result:"warning"});
       setTimeout(() => {
-        props.Setalert(null);
+        props.setalert(null);
       }, 2000); 
       return;
     }
     if (!token) {
-      props.Setalert({mssg:"Authorization token not found. Please log in.", result:"danger"});
+      props.setalert({mssg:"Authorization token not found. Please log in.", result:"danger"});
       setTimeout(() => {
-        props.Setalert(null);
+        props.setalert(null);
       }, 2000); 
       return;
     }
@@ -139,26 +132,21 @@ export default function Enroll(props) {
         return response.json();
       });
       await Promise.all(enrollmentPromises);
+      
+      // Update enrolled courses state directly after successful enrollment
+      setEnrolledCourseCodes(prevCodes => [...prevCodes, ...formData.courses]);
+      
+      // Clear the form and show success message
       setFormData(prev => ({ ...prev, courses: [] }));
-      const refreshResponse = await fetch("http://localhost:4000/student/enrollment", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      const refreshedData = await refreshResponse.json();
-      const updatedCodes = Array.isArray(refreshedData.data) ? refreshedData.data.map(c => c.course_code) : (Array.isArray(refreshedData) ? refreshedData.map(c => c.course_code) : []);
-      setEnrolledCourseCodes(updatedCodes);
-      props.Setalert({mssg:"Courses enrolled successfully!",result:"success"});
+      props.setalert({mssg:"Courses enrolled successfully!",result:"success"});
       setTimeout(() => {
-        props.Setalert(null);
+        props.setalert(null);
       }, 2000); 
     } catch (err) {
       console.error("Enrollment failed:", err);
-      props.Setalert({mssg:`Error during enrollment: ${err.message}`,result:"danger"});
+      props.setalert({mssg:`Error during enrollment: ${err.message}`,result:"danger"});
       setTimeout(() => {
-        props.Setalert(null);
+        props.setalert(null);
       }, 2000); 
     }
   };
@@ -168,9 +156,9 @@ export default function Enroll(props) {
       return;
     }
     if (!token) {
-      props.Setalert({mssg:"Authorization token not found. Please log in.",result:"danger"});
+      props.setalert({mssg:"Authorization token not found. Please log in.",result:"danger"});
       setTimeout(() => {
-        props.Setalert(null);
+        props.setalert(null);
       }, 2000); 
       return;
     }
@@ -189,15 +177,15 @@ export default function Enroll(props) {
       }
       await response.json();
       setEnrolledCourseCodes(prevCodes => prevCodes.filter(code => code !== course_code));
-      props.Setalert({mssg:`Course ${course_code} dropped successfully!`,result:"success"});
+      props.setalert({mssg:`Course ${course_code} dropped successfully!`,result:"success"});
       setTimeout(() => {
-        props.Setalert(null);
+        props.setalert(null);
       }, 2000); 
     } catch (err) {
       console.error("Error removing course:", err);
-      props.Setalert({mssg:`Error dropping course: ${err.message}`,result:"danger"});
+      props.setalert({mssg:`Error dropping course: ${err.message}`,result:"danger"});
       setTimeout(() => {
-        props.Setalert(null);
+        props.setalert(null);
       }, 2000); 
     }
   };
@@ -226,7 +214,7 @@ export default function Enroll(props) {
                       checked={formData.courses.includes(c.course_code)}
                       onChange={handleChange}
                     />
-                    <label htmlFor={`course-${c.course_code}`}>{c.course_name}</label>
+                    <label htmlFor={`course-${c.course_code}`}>{c.course_name}{c.course_code}</label>
                   </div>
                 ))
               ) : (
