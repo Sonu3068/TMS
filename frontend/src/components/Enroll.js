@@ -109,16 +109,16 @@ export default function Enroll(props) {
   const handleSubmit = async e => {
     e.preventDefault();
     if (formData.courses.length === 0) {
-      props.setalert({mssg:"Please select at least one course.", result:"warning"});
+      props.Setalert({mssg:"Please select at least one course.", result:"warning"});
       setTimeout(() => {
-        props.setalert(null);
+        props.Setalert(null);
       }, 2000); 
       return;
     }
     if (!token) {
-      props.setalert({mssg:"Authorization token not found. Please log in.", result:"danger"});
+      props.Setalert({mssg:"Authorization token not found. Please log in.", result:"danger"});
       setTimeout(() => {
-        props.setalert(null);
+        props.Setalert(null);
       }, 2000); 
       return;
     }
@@ -150,15 +150,15 @@ export default function Enroll(props) {
       const refreshedData = await refreshResponse.json();
       const updatedCodes = Array.isArray(refreshedData.data) ? refreshedData.data.map(c => c.course_code) : (Array.isArray(refreshedData) ? refreshedData.map(c => c.course_code) : []);
       setEnrolledCourseCodes(updatedCodes);
-      props.setalert({mssg:"Courses enrolled successfully!",result:"success"});
+      props.Setalert({mssg:"Courses enrolled successfully!",result:"success"});
       setTimeout(() => {
-        props.setalert(null);
+        props.Setalert(null);
       }, 2000); 
     } catch (err) {
       console.error("Enrollment failed:", err);
-      props.setalert({mssg:`Error during enrollment: ${err.message}`,result:"danger"});
+      props.Setalert({mssg:`Error during enrollment: ${err.message}`,result:"danger"});
       setTimeout(() => {
-        props.setalert(null);
+        props.Setalert(null);
       }, 2000); 
     }
   };
@@ -168,9 +168,9 @@ export default function Enroll(props) {
       return;
     }
     if (!token) {
-      props.setalert({mssg:"Authorization token not found. Please log in.",result:"danger"});
+      props.Setalert({mssg:"Authorization token not found. Please log in.",result:"danger"});
       setTimeout(() => {
-        props.setalert(null);
+        props.Setalert(null);
       }, 2000); 
       return;
     }
@@ -189,15 +189,15 @@ export default function Enroll(props) {
       }
       await response.json();
       setEnrolledCourseCodes(prevCodes => prevCodes.filter(code => code !== course_code));
-      props.setalert({mssg:`Course ${course_code} dropped successfully!`,result:"success"});
+      props.Setalert({mssg:`Course ${course_code} dropped successfully!`,result:"success"});
       setTimeout(() => {
-        props.setalert(null);
+        props.Setalert(null);
       }, 2000); 
     } catch (err) {
       console.error("Error removing course:", err);
-      props.setalert({mssg:`Error dropping course: ${err.message}`,result:"danger"});
+      props.Setalert({mssg:`Error dropping course: ${err.message}`,result:"danger"});
       setTimeout(() => {
-        props.setalert(null);
+        props.Setalert(null);
       }, 2000); 
     }
   };
