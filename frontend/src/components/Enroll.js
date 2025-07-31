@@ -305,7 +305,7 @@ export default function Enroll() {
               enrolled.map(c => (
                 <li key={c.course_code}>
                   {c.course_name} ({c.course_code})
-                  <button onClick={() => removeCourse(c.course_code)}>Remove</button>
+                  <button onClick={() => removeCourse(c.course_code)} className="">Remove</button>
                 </li>
               ))
             ) : (
